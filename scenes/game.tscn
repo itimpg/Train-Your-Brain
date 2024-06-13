@@ -1,0 +1,147 @@
+[gd_scene load_steps=8 format=3 uid="uid://bnj61bu4m6f87"]
+
+[ext_resource type="Texture2D" uid="uid://dkh352007mxy8" path="res://assets/whack_a_match/background.svg" id="1_i164r"]
+[ext_resource type="Script" path="res://scripts/Game.cs" id="1_ye6vu"]
+[ext_resource type="PackedScene" uid="uid://tt77v0v4iatp" path="res://scenes/timer.tscn" id="2_6a8f6"]
+[ext_resource type="Texture2D" uid="uid://c0ofv416mbqxu" path="res://assets/whack_a_match/background_main.svg" id="3_edo2f"]
+[ext_resource type="Texture2D" uid="uid://dw4xytourojey" path="res://assets/whack_a_match/background_target.svg" id="4_nyef0"]
+[ext_resource type="PackedScene" uid="uid://df3egat2olkee" path="res://scenes/matching_item.tscn" id="5_wbbdq"]
+[ext_resource type="PackedScene" uid="uid://oaxx6pbvs22n" path="res://scenes/mole.tscn" id="8_0fuja"]
+
+[node name="Game" type="CanvasLayer"]
+script = ExtResource("1_ye6vu")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_i164r")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Timer" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_6a8f6")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control6" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_edo2f")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_nyef0")
+
+[node name="MatchingItemsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_right = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MatchingItem" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer" groups=["MatchTarget"] instance=ExtResource("5_wbbdq")]
+layout_mode = 2
+
+[node name="MatchingItem2" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer" groups=["MatchTarget"] instance=ExtResource("5_wbbdq")]
+layout_mode = 2
+
+[node name="MatchingItem3" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer" groups=["MatchTarget"] instance=ExtResource("5_wbbdq")]
+layout_mode = 2
+
+[node name="MatchingItem4" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer" groups=["MatchTarget"] instance=ExtResource("5_wbbdq")]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Mole1" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer2" instance=ExtResource("8_0fuja")]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 280
+
+[node name="Mole2" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer3" instance=ExtResource("8_0fuja")]
+layout_mode = 2
+
+[node name="Mole3" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer3" instance=ExtResource("8_0fuja")]
+layout_mode = 2
+
+[node name="Control3" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Mole4" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer4" instance=ExtResource("8_0fuja")]
+layout_mode = 2
+
+[node name="Control4" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control5" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

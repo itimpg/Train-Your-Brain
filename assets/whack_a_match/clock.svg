@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Clock" transform="matrix(1,0,0,1,-208.691,-197.527)">
+        <g transform="matrix(1.06522,0,0,1,-16.1187,0)">
+            <rect x="238.787" y="210.497" width="8.366" height="6.669" style="fill:rgb(151,145,61);stroke:rgb(56,56,56);stroke-width:4.03px;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,0.781489,-0.485802)">
+            <path d="M240.304,216.499C251.47,216.541 260.283,225.484 261.03,237.421C261.951,252.142 252.272,255.513 240.365,255.513C228.458,255.513 218.541,255.012 218.731,237.421C218.859,225.515 231.258,216.465 240.304,216.499Z" style="fill:rgb(151,145,61);stroke:rgb(56,56,56);stroke-width:4.17px;"/>
+        </g>
+        <path d="M235.878,211.228L250.529,211.321C250.529,211.321 251.149,204.026 243.514,204.026C235.878,204.026 235.878,211.29 235.878,211.228Z" style="fill:rgb(154,145,63);stroke:rgb(56,56,56);stroke-width:4.17px;"/>
+        <g transform="matrix(1,0,0,1,0.188795,-0.701703)">
+            <path d="M242.033,223.141C251.862,223.568 253.874,229.639 253.874,236.592C253.874,243.546 250.881,248.907 240.991,249.191C234.041,249.39 227.919,243.64 227.919,236.687C227.919,229.734 234.065,222.795 242.033,223.141Z" style="fill:rgb(255,250,241);stroke:rgb(56,56,56);stroke-width:4.17px;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,0.419178,-0.181874)">
+            <path d="M240.691,236.08L244.546,228.563L239.575,235.096C239.575,235.096 239.745,236.747 240.691,236.08Z" style="fill:none;stroke:rgb(56,56,56);stroke-width:4.17px;"/>
+        </g>
+    </g>
+</svg>
