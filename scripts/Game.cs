@@ -5,10 +5,13 @@ using System.Collections.Generic;
 public partial class Game : CanvasLayer
 {
 	private MoleManager _moleManager;
-
+	private GameTimer _timer;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
-	{
+	{ 
+		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/Timer");
+		_timer.OnTimeout += OnTimeout;
+
 		var matchingItemsContainer = GetNode<HBoxContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer");
 
 		var mole1 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer2/Mole1");
@@ -27,9 +30,15 @@ public partial class Game : CanvasLayer
 			moles);
 
 		_moleManager.SetNewGame();
+		_timer.StartCountdown();
 	}
 
-	public override void _Process(double delta)
+    private void OnTimeout()
+    {
+		GD.Print("timeout");
+    }
+
+    public override void _Process(double delta)
 	{
 	}
 

@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://tt77v0v4iatp"]
+[gd_scene load_steps=4 format=3 uid="uid://tt77v0v4iatp"]
 
 [ext_resource type="Texture2D" uid="uid://b6nbgyw5hchpv" path="res://assets/whack_a_match/clock.svg" id="1_38dea"]
+[ext_resource type="Script" path="res://scripts/GameTimer.cs" id="1_nqodl"]
 [ext_resource type="LabelSettings" uid="uid://la0xr3k21eaw" path="res://assets/timer_font_style.tres" id="2_7xyt2"]
 
-[node name="Timer" type="MarginContainer"]
+[node name="GameTimer" type="MarginContainer"]
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
+script = ExtResource("1_nqodl")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -15,7 +17,7 @@ layout_mode = 2
 layout_mode = 2
 texture = ExtResource("1_38dea")
 
-[node name="CoutdownLabel" type="Label" parent="HBoxContainer"]
+[node name="CountdownLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 text = "60"
 label_settings = ExtResource("2_7xyt2")
@@ -29,3 +31,7 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "124"
 label_settings = ExtResource("2_7xyt2")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
