@@ -3,11 +3,14 @@ using System;
 
 public partial class ShowScoreScene : CanvasLayer
 {
-	// Called when the node enters the scene tree for the first time.
+	private string _score;
+
 	public override void _Ready()
 	{
 		var highScoreLabel = GetNode<Label>("Panel/MarginContainer/VBoxContainer/HBoxContainer/HighScoreLabel");
+		
 		var scoreLabel = GetNode<Label>("Panel/MarginContainer/VBoxContainer/ScoreLabel");
+		scoreLabel.Text = _score;
 
 		var retryButton = GetNode<TextureButton>("Panel/MarginContainer/VBoxContainer/RetryButton");
 		retryButton.Pressed += RetryGame;
@@ -26,5 +29,10 @@ public partial class ShowScoreScene : CanvasLayer
 	{
 		var global = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
 		global.GotoScene("res://scenes/title_scene.tscn");
+	}
+
+	public void Initialize(string data)
+	{
+		_score = data;
 	}
 }

@@ -14,7 +14,7 @@ public partial class WhackAMatchSingleton : Node
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 
-    public void GotoScene(string path)
+    public void GotoScene(string path, string data = null)
     {
         // This function will usually be called from a signal callback,
         // or some other function from the current scene.
@@ -25,10 +25,10 @@ public partial class WhackAMatchSingleton : Node
         // The solution is to defer the load to a later time, when
         // we can be sure that no code from the current scene is running:
 
-        CallDeferred(MethodName.DeferredGotoScene, path);
+        CallDeferred(MethodName.DeferredGotoScene, path, data);
     }
 
-    public void DeferredGotoScene(string path)
+    public void DeferredGotoScene(string path, string data)
     {
         // It is now safe to remove the current scene.
         CurrentScene.Free();
@@ -38,6 +38,10 @@ public partial class WhackAMatchSingleton : Node
 
         // Instance the new scene.
         CurrentScene = nextScene.Instantiate();
+        if (!string.IsNullOrEmpty(data) && CurrentScene.HasMethod("Initialize"))
+        {
+            CurrentScene.Call("Initialize", data);
+        }
 
         // Add it to the active scene, as child of root.
         GetTree().Root.AddChild(CurrentScene);

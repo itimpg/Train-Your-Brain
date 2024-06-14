@@ -171,6 +171,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="GobackButton" type="TextureButton" parent="MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("8_r7tq4")

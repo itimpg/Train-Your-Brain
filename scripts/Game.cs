@@ -59,7 +59,7 @@ public partial class Game : CanvasLayer
 	{
 		GD.Print("timeout");
 		//TODO: save score
-		_singleton.GotoScene("res://scenes/show_score_scene.tscn");
+		_singleton.GotoScene("res://scenes/show_score_scene.tscn", _moleManager.Scorer.Score.ToString());
 	}
 
 	public override void _Process(double delta)
