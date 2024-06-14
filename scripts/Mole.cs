@@ -47,4 +47,14 @@ public partial class Mole : Control
     animationPlayer.Play("hide");
     IsHiding = true;
   }
+
+  public void WhackCorrect()
+  {
+    animationPlayer.Play("whack_correct");
+  }
+
+  public void WhackIncorrect()
+  {
+    animationPlayer.Play("whack_incorrect");
+  }
 }

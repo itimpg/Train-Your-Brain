@@ -6,40 +6,58 @@ public partial class Game : CanvasLayer
 {
 	private MoleManager _moleManager;
 	private GameTimer _timer;
-	// Called when the node enters the scene tree for the first time.
+	private Label _scoreLabel;
+	private MarginContainer _playZone;
+
 	public override void _Ready()
-	{ 
-		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/Timer");
-		_timer.OnTimeout += OnTimeout;
+	{
+		_playZone = GetNode<MarginContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone");
+		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/HBoxContainer/Timer");
+		_timer.OnTimeout += OnGameTimeout;
 
-		var matchingItemsContainer = GetNode<HBoxContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer");
+		var startGameTimer = GetNode<Timer>("StartGameTimer");
+		startGameTimer.Timeout += StartGame;
 
-		var mole1 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer2/Mole1");
-		var mole2 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer3/Mole2");
-		var mole3 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer3/Mole3");
-		var mole4 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/MarginContainer/VBoxContainer/HBoxContainer4/Mole4");
+		_scoreLabel = GetNode<Label>("MarginContainer/VBoxContainer/HBoxContainer/ScoreLabel");
+
+		var matchingItemsContainer = GetNode<HBoxContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer");
+
+		var mole1 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer2/Mole1");
+		var mole2 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer3/Mole2");
+		var mole3 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer3/Mole3");
+		var mole4 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer4/Mole4");
 
 		var moles = new List<Mole>
 		{
 			mole1, mole2, mole3, mole4
 		};
 
+		GD.Print(mole1);
+
 		_moleManager = new MoleManager(
 			GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton"),
 			matchingItemsContainer,
 			moles);
 
-		_moleManager.SetNewGame();
-		_timer.StartCountdown();
+		_playZone.Hide();
 	}
 
-    private void OnTimeout()
-    {
-		GD.Print("timeout");
-    }
-
-    public override void _Process(double delta)
+	private void StartGame()
 	{
+		GD.Print("Start");
+		_moleManager.ResetGame();
+		_timer.StartCountdown();
+		_playZone.Show();
+	}
+
+	private void OnGameTimeout()
+	{
+		GD.Print("timeout");
+	}
+
+	public override void _Process(double delta)
+	{
+		_scoreLabel.Text = _moleManager.Scorer.Score.ToString();
 	}
 
 }

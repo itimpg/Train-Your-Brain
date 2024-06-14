@@ -7,61 +7,37 @@ using System.Threading;
 using System.Threading.Tasks;
 
 public partial class MoleManager : Node
-{
-    PackedScene _matchingItemScene;
-
-    List<TextureGroup> _textureGroups;
-    List<MatchingItem> _targetMatchingItems;
-
+{ 
     private WhackAMatchSingleton _singleton;
-    private List<Mole> _moles;
     private HBoxContainer _matchingItemsContainer;
+    private List<Mole> _moles;
+ 
+    private PackedScene _matchingItemScene; 
+    private List<MatchingItem> _targetMatchingItems;
+    private IEnumerable<TextureGroup> _textureGroups;
+
+    private LoadedTexture[] _randomPickableItems;
+ 
+    public Scorer Scorer { get; private set; }
 
     public MoleManager(
         WhackAMatchSingleton singleton,
         HBoxContainer matchingItemsContainer,
         List<Mole> moles)
     {
-        _targetMatchingItems = new List<MatchingItem>();
-
-        _matchingItemScene = GD.Load<PackedScene>("res://scenes/matching_item.tscn");
-
         _singleton = singleton;
-        _singleton.OnMolePressed += OnMolePressed;
-
         _matchingItemsContainer = matchingItemsContainer;
         _moles = moles;
+        _singleton.OnMolePressed += OnMolePressed;
+
+        _matchingItemScene = GD.Load<PackedScene>("res://scenes/matching_item.tscn");
+        _targetMatchingItems = new List<MatchingItem>();
 
         var path = "res://assets/whack_a_match/pickable_items/";
-        var rootDir = DirAccess.Open(path);
-
-        if (rootDir == null)
-        {
-            throw new Exception($"directory {path} not found");
-        }
-
-        _textureGroups = new List<TextureGroup>();
-
-        var directories = rootDir.GetDirectories();
-        foreach (var dir in directories)
-        {
-            var dirPath = path + dir;
-            var loadedTextures = DirAccess.Open(dirPath).GetFiles()
-                .Where(x => x.Contains(".import"))
-                .Select(fileName => new LoadedTexture
-                {
-                    Name = fileName,
-                    Texture2D = ResourceLoader.Load<Texture2D>($"{dirPath}/{fileName}".Replace(".import", ""))
-                });
-            _textureGroups.Add(new TextureGroup
-            {
-                GroupName = dir,
-                Textures = loadedTextures
-            });
-        }
+        _textureGroups = ImageLoader.LoadFromPath(path);
+        
+        Scorer = new Scorer();
     }
-
-    private LoadedTexture[] _randomPickableItems;
 
     private void RandomTarget(int pickableItemCount)
     {
@@ -98,7 +74,13 @@ public partial class MoleManager : Node
         }
     }
 
-    public void SetNewGame()
+    public void ResetGame()
+    {
+        Scorer.Reset();
+        RefreshMatching();
+    }
+
+    public void RefreshMatching()
     {
         var pickableItemCount = 4;
         var moleCount = 3;
@@ -113,14 +95,6 @@ public partial class MoleManager : Node
         SetupMoles(moleCount);
     }
 
-    public void EndTurn()
-    {
-        foreach (var mole in _moles)
-        {
-            mole.HideMole();
-        }
-    }
-
     public async void OnMolePressed(Mole pressedMole)
     {
         var matchingItem = _targetMatchingItems.FirstOrDefault(x => x.Key == pressedMole.Key);
@@ -132,13 +106,14 @@ public partial class MoleManager : Node
 
         if (isCorrect)
         {
+            pressedMole.WhackCorrect();
             await matchingItem.Blink();
             pressedMole.HideMole();
-            // TODO: add new score
+            Scorer.AddScore();
             _targetMatchingItems.Remove(matchingItem);
             if (_targetMatchingItems.Count == 0)
             {
-                SetNewGame();
+                RefreshMatching();
             }
             else
             {
@@ -150,22 +125,11 @@ public partial class MoleManager : Node
         }
         else
         {
-            // TODO: minus score
+            pressedMole.WhackIncorrect();
+            Scorer.MinusScore();
             await Task.Delay(600);
             pressedMole.HideMole();
-            SetNewGame();
+            RefreshMatching();
         }
     }
-}
-
-public class TextureGroup
-{
-    public string GroupName { get; set; }
-    public IEnumerable<LoadedTexture> Textures { get; set; }
-}
-
-public class LoadedTexture
-{
-    public string Name { get; set; }
-    public Texture2D Texture2D { get; set; }
 }
