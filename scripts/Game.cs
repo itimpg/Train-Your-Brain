@@ -15,8 +15,8 @@ public partial class Game : CanvasLayer
 		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/HBoxContainer/Timer");
 		_timer.OnTimeout += OnGameTimeout;
 
-		var startGameTimer = GetNode<Timer>("StartGameTimer");
-		startGameTimer.Timeout += StartGame;
+		var startGameTimer = GetNode<CountdownScene>("StartGameTimer");
+		startGameTimer.OnTimeout += StartGame;
 
 		_scoreLabel = GetNode<Label>("MarginContainer/VBoxContainer/HBoxContainer/ScoreLabel");
 
@@ -40,6 +40,7 @@ public partial class Game : CanvasLayer
 			moles);
 
 		_playZone.Hide();
+		startGameTimer.StartCountdown();
 	}
 
 	private void StartGame()

@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://hm8e1lkrpy4d"]
+
+[ext_resource type="Script" path="res://scripts/CountdownScene.cs" id="1_42fiw"]
+[ext_resource type="LabelSettings" uid="uid://lymyxkjmms2m" path="res://assets/countdown_font_style.tres" id="2_flth3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fo6in"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="CountdownScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_42fiw")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fo6in")
+
+[node name="CountdownLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -0.5
+offset_top = -11.5
+offset_right = 0.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "3"
+label_settings = ExtResource("2_flth3")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
