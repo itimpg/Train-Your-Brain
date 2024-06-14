@@ -1,6 +1,5 @@
-[gd_scene load_steps=11 format=3 uid="uid://bnj61bu4m6f87"]
+[gd_scene load_steps=13 format=3 uid="uid://bnj61bu4m6f87"]
 
-[ext_resource type="Texture2D" uid="uid://dkh352007mxy8" path="res://assets/whack_a_match/background.svg" id="1_i164r"]
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_ye6vu"]
 [ext_resource type="PackedScene" uid="uid://tt77v0v4iatp" path="res://scenes/game_timer.tscn" id="2_6a8f6"]
 [ext_resource type="Texture2D" uid="uid://c0ofv416mbqxu" path="res://assets/whack_a_match/background_main.svg" id="3_edo2f"]
@@ -8,19 +7,27 @@
 [ext_resource type="Texture2D" uid="uid://dw4xytourojey" path="res://assets/whack_a_match/background_target.svg" id="4_nyef0"]
 [ext_resource type="PackedScene" uid="uid://df3egat2olkee" path="res://scenes/matching_item.tscn" id="5_wbbdq"]
 [ext_resource type="PackedScene" uid="uid://oaxx6pbvs22n" path="res://scenes/mole.tscn" id="8_0fuja"]
+[ext_resource type="Texture2D" uid="uid://b0e8lqgpc27dt" path="res://assets/whack_a_match/button_start.svg" id="8_r7tq4"]
 [ext_resource type="PackedScene" uid="uid://hm8e1lkrpy4d" path="res://scenes/countdown_scene.tscn" id="9_6ci16"]
 [ext_resource type="PackedScene" uid="uid://3jtemqdpfwbd" path="res://scenes/result_scene.tscn" id="10_mqxe3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v5ti7"]
+bg_color = Color(0.576471, 0.823529, 0.505882, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_tptd1"]
+font_size = 32
+font_color = Color(0.34902, 0.215686, 0.247059, 1)
 
 [node name="Game" type="CanvasLayer"]
 script = ExtResource("1_ye6vu")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Panel" type="Panel" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_i164r")
+theme_override_styles/panel = SubResource("StyleBoxFlat_v5ti7")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -163,6 +170,29 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="GobackButton" type="TextureButton" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("8_r7tq4")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GobackButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -31.5
+offset_top = -11.5
+offset_right = 31.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Go Back"
+label_settings = SubResource("LabelSettings_tptd1")
+
 [node name="StartGameTimer" parent="." instance=ExtResource("9_6ci16")]
+visible = false
 
 [node name="ResultScene" parent="." instance=ExtResource("10_mqxe3")]
+visible = false

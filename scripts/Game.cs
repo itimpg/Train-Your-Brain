@@ -9,8 +9,11 @@ public partial class Game : CanvasLayer
 	private Label _scoreLabel;
 	private MarginContainer _playZone;
 
+	private WhackAMatchSingleton _singleton;
+
 	public override void _Ready()
 	{
+		_singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
 		_playZone = GetNode<MarginContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone");
 		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/HBoxContainer/Timer");
 		_timer.OnTimeout += OnGameTimeout;
@@ -31,9 +34,9 @@ public partial class Game : CanvasLayer
 		{
 			mole1, mole2, mole3, mole4
 		};
- 
+
 		_moleManager = new MoleManager(
-			GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton"),
+			_singleton,
 			matchingItemsContainer,
 			moles,
 			GetNode<ResultScene>("ResultScene"),
@@ -41,10 +44,13 @@ public partial class Game : CanvasLayer
 
 		_playZone.Hide();
 		startGameTimer.StartCountdown();
+
+		var gobackButton = GetNode<TextureButton>("MarginContainer/VBoxContainer/GobackButton");
+		gobackButton.Pressed += GoToTitleScene;
 	}
 
 	private async void StartGame()
-	{ 
+	{
 		await _moleManager.ResetGame();
 		_timer.StartCountdown();
 	}
@@ -52,6 +58,8 @@ public partial class Game : CanvasLayer
 	private void OnGameTimeout()
 	{
 		GD.Print("timeout");
+		//TODO: save score
+		//TODO: go to summary scene
 	}
 
 	public override void _Process(double delta)
@@ -59,4 +67,10 @@ public partial class Game : CanvasLayer
 		_scoreLabel.Text = _moleManager.Scorer.Score.ToString();
 	}
 
+
+	private void GoToTitleScene()
+	{
+		var global = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
+		global.GotoScene("res://scenes/title_scene.tscn");
+	}
 }

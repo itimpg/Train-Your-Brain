@@ -83,14 +83,15 @@ public partial class MoleManager : Node
     public Task ResetGame()
     {
         Scorer.Reset();
-        return RefreshMatching();
+        return RefreshMatching(true);
     }
 
-    public async Task RefreshMatching()
+    public async Task RefreshMatching(bool isReset = false)
     {
         _playZone.Hide();
 
-        await Task.Delay(400);
+        if (!isReset)
+            await Task.Delay(400);
 
         var pickableItemCount = 4;
         var moleCount = 3;

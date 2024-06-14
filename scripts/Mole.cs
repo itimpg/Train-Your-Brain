@@ -57,4 +57,9 @@ public partial class Mole : Control
   {
     animationPlayer.Play("whack_incorrect");
   }
+
+  public void PlayDemo()
+  { 
+    animationPlayer.Play("demo");
+  }
 }

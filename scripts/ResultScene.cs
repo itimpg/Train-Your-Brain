@@ -16,7 +16,7 @@ public partial class ResultScene : Control
 	{
 		Show();
 		_animationPlayer.Play("correct");
-		await Task.Delay(400);
+		await Task.Delay(600);
 		Hide();
 	}
 
@@ -24,7 +24,7 @@ public partial class ResultScene : Control
 	{
 		Show();
 		_animationPlayer.Play("incorrect");
-		await Task.Delay(400);
+		await Task.Delay(600);
 		Hide();
 	}
 }
