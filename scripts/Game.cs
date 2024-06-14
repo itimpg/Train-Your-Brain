@@ -59,7 +59,7 @@ public partial class Game : CanvasLayer
 	{
 		GD.Print("timeout");
 		//TODO: save score
-		//TODO: go to summary scene
+		_singleton.GotoScene("res://scenes/show_score_scene.tscn");
 	}
 
 	public override void _Process(double delta)
@@ -70,7 +70,6 @@ public partial class Game : CanvasLayer
 
 	private void GoToTitleScene()
 	{
-		var global = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
-		global.GotoScene("res://scenes/title_scene.tscn");
+		_singleton.GotoScene("res://scenes/title_scene.tscn");
 	}
 }
