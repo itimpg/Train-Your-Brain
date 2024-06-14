@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bnj61bu4m6f87"]
+[gd_scene load_steps=11 format=3 uid="uid://bnj61bu4m6f87"]
 
 [ext_resource type="Texture2D" uid="uid://dkh352007mxy8" path="res://assets/whack_a_match/background.svg" id="1_i164r"]
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_ye6vu"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://df3egat2olkee" path="res://scenes/matching_item.tscn" id="5_wbbdq"]
 [ext_resource type="PackedScene" uid="uid://oaxx6pbvs22n" path="res://scenes/mole.tscn" id="8_0fuja"]
 [ext_resource type="PackedScene" uid="uid://hm8e1lkrpy4d" path="res://scenes/countdown_scene.tscn" id="9_6ci16"]
+[ext_resource type="PackedScene" uid="uid://3jtemqdpfwbd" path="res://scenes/result_scene.tscn" id="10_mqxe3"]
 
 [node name="Game" type="CanvasLayer"]
 script = ExtResource("1_ye6vu")
@@ -163,3 +164,5 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="StartGameTimer" parent="." instance=ExtResource("9_6ci16")]
+
+[node name="ResultScene" parent="." instance=ExtResource("10_mqxe3")]

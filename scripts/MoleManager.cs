@@ -7,27 +7,33 @@ using System.Threading;
 using System.Threading.Tasks;
 
 public partial class MoleManager : Node
-{ 
+{
     private WhackAMatchSingleton _singleton;
     private HBoxContainer _matchingItemsContainer;
     private List<Mole> _moles;
- 
-    private PackedScene _matchingItemScene; 
+    private ResultScene _resultScene;
+    private MarginContainer _playZone;
+
+    private PackedScene _matchingItemScene;
     private List<MatchingItem> _targetMatchingItems;
     private IEnumerable<TextureGroup> _textureGroups;
 
     private LoadedTexture[] _randomPickableItems;
- 
+
     public Scorer Scorer { get; private set; }
 
     public MoleManager(
         WhackAMatchSingleton singleton,
         HBoxContainer matchingItemsContainer,
-        List<Mole> moles)
+        List<Mole> moles,
+        ResultScene resultScene,
+        MarginContainer playZone)
     {
         _singleton = singleton;
         _matchingItemsContainer = matchingItemsContainer;
         _moles = moles;
+        _resultScene = resultScene;
+        _playZone = playZone;
         _singleton.OnMolePressed += OnMolePressed;
 
         _matchingItemScene = GD.Load<PackedScene>("res://scenes/matching_item.tscn");
@@ -35,7 +41,7 @@ public partial class MoleManager : Node
 
         var path = "res://assets/whack_a_match/pickable_items/";
         _textureGroups = ImageLoader.LoadFromPath(path);
-        
+
         Scorer = new Scorer();
     }
 
@@ -74,14 +80,18 @@ public partial class MoleManager : Node
         }
     }
 
-    public void ResetGame()
+    public Task ResetGame()
     {
         Scorer.Reset();
-        RefreshMatching();
+        return RefreshMatching();
     }
 
-    public void RefreshMatching()
+    public async Task RefreshMatching()
     {
+        _playZone.Hide();
+
+        await Task.Delay(400);
+
         var pickableItemCount = 4;
         var moleCount = 3;
 
@@ -93,6 +103,8 @@ public partial class MoleManager : Node
         RandomTarget(pickableItemCount);
 
         SetupMoles(moleCount);
+
+        _playZone.Show();
     }
 
     public async void OnMolePressed(Mole pressedMole)
@@ -107,16 +119,18 @@ public partial class MoleManager : Node
         if (isCorrect)
         {
             pressedMole.WhackCorrect();
-            await matchingItem.Blink();
-            pressedMole.HideMole();
             Scorer.AddScore();
             _targetMatchingItems.Remove(matchingItem);
             if (_targetMatchingItems.Count == 0)
             {
-                RefreshMatching();
+                await Task.WhenAll(_resultScene.ShowCorrect(), matchingItem.Blink());
+                pressedMole.HideMole();
+                await RefreshMatching();
             }
             else
             {
+                await matchingItem.Blink();
+                pressedMole.HideMole();
                 matchingItem.HideImage();
 
                 var moleCount = 3;
@@ -126,10 +140,10 @@ public partial class MoleManager : Node
         else
         {
             pressedMole.WhackIncorrect();
+            await _resultScene.ShowIncorrect();
             Scorer.MinusScore();
-            await Task.Delay(600);
             pressedMole.HideMole();
-            RefreshMatching();
+            await RefreshMatching();
         }
     }
 }

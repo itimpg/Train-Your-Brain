@@ -31,24 +31,22 @@ public partial class Game : CanvasLayer
 		{
 			mole1, mole2, mole3, mole4
 		};
-
-		GD.Print(mole1);
-
+ 
 		_moleManager = new MoleManager(
 			GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton"),
 			matchingItemsContainer,
-			moles);
+			moles,
+			GetNode<ResultScene>("ResultScene"),
+			_playZone);
 
 		_playZone.Hide();
 		startGameTimer.StartCountdown();
 	}
 
-	private void StartGame()
-	{
-		GD.Print("Start");
-		_moleManager.ResetGame();
+	private async void StartGame()
+	{ 
+		await _moleManager.ResetGame();
 		_timer.StartCountdown();
-		_playZone.Show();
 	}
 
 	private void OnGameTimeout()
