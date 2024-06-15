@@ -561,12 +561,12 @@ texture = ExtResource("5_abbkb")
 [node name="Sign" type="TextureRect" parent="Control/Node2D/Bolloon"]
 visible = false
 layout_mode = 0
-offset_left = 22.0
-offset_top = 46.0
-offset_right = 496.0
-offset_bottom = 426.0
+offset_left = 28.0
+offset_top = 45.5248
+offset_right = 408.0
+offset_bottom = 425.525
 scale = Vector2(0.154265, 0.154265)
-texture = ExtResource("6_d0ktm")
+texture = ExtResource("7_ltfsg")
 
 [node name="FrontPit" type="TextureRect" parent="Control"]
 layout_mode = 1
