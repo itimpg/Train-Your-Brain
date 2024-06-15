@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://vnb4n0pu32bi"]
+
+[ext_resource type="Script" path="res://scripts/CooldownScene.cs" id="1_g8chs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b8gfr"]
+bg_color = Color(0.576471, 0.823529, 0.505882, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fusfa"]
+font_size = 128
+outline_size = 64
+outline_color = Color(0, 0, 0, 1)
+
+[node name="CooldownScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g8chs")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b8gfr")
+
+[node name="TimeupLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -186.0
+offset_top = -84.5
+offset_right = 186.0
+offset_bottom = 90.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.169297
+pivot_offset = Vector2(186, 86)
+text = "Time !
+"
+label_settings = SubResource("LabelSettings_fusfa")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true

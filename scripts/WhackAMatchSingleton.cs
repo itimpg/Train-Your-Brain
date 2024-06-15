@@ -6,6 +6,18 @@ public partial class WhackAMatchSingleton : Node
     [Signal]
     public delegate void OnMolePressedEventHandler(Mole mole);
 
+
+    [Signal]
+    public delegate void GoToTitleSceneEventHandler();
+
+
+    [Signal]
+    public delegate void GotoGameSceneEventHandler();
+
+
+    [Signal]
+    public delegate void GoToShowScoreSceneEventHandler(int score);
+
     public Node CurrentScene { get; set; }
 
     public override void _Ready()

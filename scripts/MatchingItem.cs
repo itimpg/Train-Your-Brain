@@ -23,26 +23,8 @@ public partial class MatchingItem : Control
 
 	public Task Blink()
 	{
-		return PlayAnimationAndWait("blink");
-	}
-
-	private async Task PlayAnimationAndWait(string animationName)
-	{
-		var tcs = new TaskCompletionSource<bool>();
-
-		void OnAnimationFinished(StringName anim)
-		{
-			if (anim == animationName)
-			{
-				_animationPlayer.AnimationFinished -= OnAnimationFinished; // Unsubscribe from the signal
-				tcs.SetResult(true); // Complete the task
-			}
-		}
-
-		_animationPlayer.AnimationFinished += OnAnimationFinished;
 		_animationPlayer.Play(animationName);
-
-		await tcs.Task;
+		await Task.Delay(600);
 	}
 
 	public void Init(LoadedTexture loadedTexture)

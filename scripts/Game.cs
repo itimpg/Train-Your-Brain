@@ -11,6 +11,8 @@ public partial class Game : CanvasLayer
 
 	private WhackAMatchSingleton _singleton;
 
+	private CountdownScene _startGameTimer;
+
 	public override void _Ready()
 	{
 		_singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
@@ -18,8 +20,8 @@ public partial class Game : CanvasLayer
 		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/HBoxContainer/Timer");
 		_timer.OnTimeout += OnGameTimeout;
 
-		var startGameTimer = GetNode<CountdownScene>("StartGameTimer");
-		startGameTimer.OnTimeout += StartGame;
+		_startGameTimer = GetNode<CountdownScene>("StartGameTimer");
+		_startGameTimer.OnTimeout += StartGame;
 
 		_scoreLabel = GetNode<Label>("MarginContainer/VBoxContainer/HBoxContainer/ScoreLabel");
 
@@ -42,11 +44,16 @@ public partial class Game : CanvasLayer
 			GetNode<ResultScene>("ResultScene"),
 			_playZone);
 
-		_playZone.Hide();
-		startGameTimer.StartCountdown();
-
 		var gobackButton = GetNode<TextureButton>("MarginContainer/VBoxContainer/GobackButton");
 		gobackButton.Pressed += GoToTitleScene;
+	}
+
+	public void ShowGameScene()
+	{
+		_timer.Reset();
+		_moleManager.Scorer.Reset();
+		_playZone.Hide();
+		_startGameTimer.StartCountdown();
 	}
 
 	private async void StartGame()
@@ -55,21 +62,18 @@ public partial class Game : CanvasLayer
 		_timer.StartCountdown();
 	}
 
-	private void OnGameTimeout()
-	{
-		GD.Print("timeout");
-		//TODO: save score
-		_singleton.GotoScene("res://scenes/show_score_scene.tscn", _moleManager.Scorer.Score.ToString());
-	}
-
 	public override void _Process(double delta)
 	{
 		_scoreLabel.Text = _moleManager.Scorer.Score.ToString();
 	}
 
+	private void OnGameTimeout()
+	{
+		_singleton.EmitSignal(nameof(_singleton.GoToShowScoreScene), _moleManager.Scorer.Score);
+	}
 
 	private void GoToTitleScene()
 	{
-		_singleton.GotoScene("res://scenes/title_scene.tscn");
+		_singleton.EmitSignal(nameof(_singleton.GoToTitleScene));
 	}
 }

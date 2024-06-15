@@ -1,0 +1,26 @@
+using Godot;
+using System;
+
+public partial class CooldownScene : Control
+{
+	private Timer _timer;
+
+	public override void _Ready()
+	{
+		_timer = GetNode<Timer>("Timer");
+		_timer.Timeout += NotifyTimeout;
+	}
+
+	public void ShowScreen()
+	{
+		GD.Print("show");
+		Show();
+		_timer.Start();
+	}
+
+	private void NotifyTimeout()
+	{
+		GD.Print("hide");
+		Hide();
+	}
+}

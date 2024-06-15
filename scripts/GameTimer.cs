@@ -24,6 +24,11 @@ public partial class GameTimer : MarginContainer
 		_countdownLabel.Text = countdown.ToString().PadLeft(2);
 	}
 
+	public void Reset()
+	{
+		_timer.Stop();
+	}
+
 	public void StartCountdown()
 	{
 		_timer.Start();

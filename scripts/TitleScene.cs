@@ -14,7 +14,8 @@ public partial class TitleScene : CanvasLayer
 
 	private void GoToGameScene()
 	{
-		var global = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
-		global.GotoScene("res://scenes/game.tscn");
+		var singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
+		singleton.EmitSignal(nameof(singleton.GotoGameScene));
+		Hide();
 	}
 }
