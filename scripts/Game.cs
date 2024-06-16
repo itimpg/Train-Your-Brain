@@ -39,6 +39,7 @@ public partial class Game : CanvasLayer
 
 		_moleManager = new MoleManager(
 			_singleton,
+			GetNode<SoundFx>("/root/SoundFx"),
 			matchingItemsContainer,
 			moles,
 			GetNode<ResultScene>("ResultScene"),

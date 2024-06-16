@@ -10,10 +10,14 @@ public partial class ShowScoreScene : CanvasLayer
 	private Label _highScoreLabel, _scoreLabel;
 
 	private WhackAMatchSingleton _singleton;
+	private SoundFx _soundFx;
 
 	public override void _Ready()
 	{
 		_singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
+		_soundFx = GetNode<SoundFx>("/root/SoundFx");
+
+
 		_saveManager = GetNode<SaveDataManager>("/root/SaveDataManager");
 		_highScoreLabel = GetNode<Label>("Panel/MarginContainer/VBoxContainer/HBoxContainer/HighScoreLabel");
 		_scoreLabel = GetNode<Label>("Panel/MarginContainer/VBoxContainer/ScoreLabel");
@@ -28,7 +32,7 @@ public partial class ShowScoreScene : CanvasLayer
 	}
 
 	public void ShowScore(int score)
-	{ 
+	{
 		_score = score;
 		_cooldownScene.ShowScreen();
 
@@ -46,11 +50,13 @@ public partial class ShowScoreScene : CanvasLayer
 
 	private void RetryGame()
 	{
+		_soundFx.Play("click");
 		_singleton.EmitSignal(nameof(_singleton.GotoGameScene));
 	}
 
 	private void DoneGame()
 	{
+		_soundFx.Play("click");
 		_singleton.EmitSignal(nameof(_singleton.GoToTitleScene));
 	}
 }

@@ -10,7 +10,7 @@ public partial class MatchingItem : Control
 	private TextureRect _texture;
 	private AnimationPlayer _animationPlayer;
 
-	public override void _Ready()
+	public override async void _Ready()
 	{
 		_texture = GetNode<TextureRect>("TextureRect");
 		if (LoadedTexture != null)
@@ -18,12 +18,12 @@ public partial class MatchingItem : Control
 			_texture.Texture = LoadedTexture.Texture2D;
 		}
 		_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-		Blink();
+		await Blink();
 	}
 
-	public Task Blink()
+	public async Task Blink()
 	{
-		_animationPlayer.Play(animationName);
+		_animationPlayer.Play("blink");
 		await Task.Delay(600);
 	}
 

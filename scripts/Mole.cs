@@ -59,7 +59,12 @@ public partial class Mole : Control
   }
 
   public void PlayDemo()
-  { 
+  {
     animationPlayer.Play("demo");
+  }
+
+  public void Reset()
+  {
+    animationPlayer.Play("RESET");
   }
 }

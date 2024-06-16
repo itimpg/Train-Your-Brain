@@ -3,8 +3,12 @@ using System;
 
 public partial class TitleScene : CanvasLayer
 {
+
+	private SoundFx _soundFx;
 	public override void _Ready()
 	{
+		_soundFx = GetNode<SoundFx>("/root/SoundFx");
+
 		var demoMole = GetNode<Mole>("Panel/MarginContainer/VBoxContainer/Mole");
 		demoMole.PlayDemo();
 
@@ -14,6 +18,7 @@ public partial class TitleScene : CanvasLayer
 
 	private void GoToGameScene()
 	{
+		_soundFx.Play("click");
 		var singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
 		singleton.EmitSignal(nameof(singleton.GotoGameScene));
 		Hide();

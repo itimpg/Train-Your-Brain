@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 public partial class MoleManager : Node
 {
     private WhackAMatchSingleton _singleton;
+    private SoundFx _soundFx;
     private HBoxContainer _matchingItemsContainer;
     private List<Mole> _moles;
     private ResultScene _resultScene;
@@ -24,12 +25,14 @@ public partial class MoleManager : Node
 
     public MoleManager(
         WhackAMatchSingleton singleton,
+        SoundFx soundFx,
         HBoxContainer matchingItemsContainer,
         List<Mole> moles,
         ResultScene resultScene,
         MarginContainer playZone)
     {
         _singleton = singleton;
+        _soundFx = soundFx;
         _matchingItemsContainer = matchingItemsContainer;
         _moles = moles;
         _resultScene = resultScene;
@@ -83,6 +86,9 @@ public partial class MoleManager : Node
     public Task ResetGame()
     {
         Scorer.Reset();
+        foreach(var mole in _moles){
+            mole.Reset();
+        }
         return RefreshMatching(true);
     }
 
@@ -119,9 +125,19 @@ public partial class MoleManager : Node
 
         if (isCorrect)
         {
-            pressedMole.WhackCorrect();
-            Scorer.AddScore();
             _targetMatchingItems.Remove(matchingItem);
+            Scorer.AddScore();
+
+            if (_targetMatchingItems.Count == 0)
+            {
+                _soundFx.Play("correct_all_answer");
+            }
+            else
+            {
+                _soundFx.Play("correct_answer");
+            }
+
+            pressedMole.WhackCorrect();
             if (_targetMatchingItems.Count == 0)
             {
                 await Task.WhenAll(_resultScene.ShowCorrect(), matchingItem.Blink());
@@ -140,6 +156,7 @@ public partial class MoleManager : Node
         }
         else
         {
+            _soundFx.Play("wrong_answer");
             pressedMole.WhackIncorrect();
             await _resultScene.ShowIncorrect();
             Scorer.MinusScore();
