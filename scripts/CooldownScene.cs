@@ -13,14 +13,12 @@ public partial class CooldownScene : Control
 
 	public void ShowScreen()
 	{
-		GD.Print("show");
 		Show();
 		_timer.Start();
 	}
 
 	private void NotifyTimeout()
 	{
-		GD.Print("hide");
 		Hide();
 	}
 }

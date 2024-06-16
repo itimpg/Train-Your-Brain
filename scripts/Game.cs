@@ -54,7 +54,7 @@ public partial class Game : CanvasLayer
 	public void ShowGameScene()
 	{
 		_timer.Reset();
-		_moleManager.Scorer.Reset();
+		_moleManager.Scorer.Reset(_singleton.IsHardMode);
 		_playZone.Hide();
 		_startGameTimer.StartCountdown();
 	}

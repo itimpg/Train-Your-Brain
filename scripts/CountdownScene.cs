@@ -32,7 +32,6 @@ public partial class CountdownScene : Control
 		Show();
 		_timer.Start();
 		_countdownLabel.Text = MAX_PLAYS.ToString();
-			GD.Print("Starg");
 	}
 
 	private void NotifyTimeout()

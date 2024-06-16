@@ -38,13 +38,28 @@ public partial class ShowScoreScene : CanvasLayer
 
 		var data = _saveManager.LoadData();
 
-		if (_score > data.HighScore)
+		if (_singleton.IsHardMode)
 		{
-			data.HighScore = _score;
-			_saveManager.SaveData(data);
+
+			if (_score > data.HighScoreHardMode)
+			{
+				data.HighScoreHardMode = _score;
+				_saveManager.SaveData(data);
+			}
+
+			_highScoreLabel.Text = data.HighScoreHardMode.ToString();
+		}
+		else
+		{
+			if (_score > data.HighScore)
+			{
+				data.HighScore = _score;
+				_saveManager.SaveData(data);
+			}
+
+			_highScoreLabel.Text = data.HighScore.ToString();
 		}
 
-		_highScoreLabel.Text = data.HighScore.ToString();
 		_scoreLabel.Text = _score.ToString();
 	}
 

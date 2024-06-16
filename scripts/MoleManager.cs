@@ -53,10 +53,10 @@ public partial class MoleManager : Node
         Scorer = new Scorer();
     }
 
-    private void RandomTarget(int pickableItemCount)
+    private void RandomTarget()
     {
         _targetMatchingItems.Clear();
-        for (var i = 0; i < pickableItemCount; i++)
+        for (var i = 0; i < Scorer.CurrentRule.MatchCount; i++)
         {
             MatchingItem item = _matchingItemScene.Instantiate<MatchingItem>();
             item.Init(_randomPickableItems[i]);
@@ -66,8 +66,10 @@ public partial class MoleManager : Node
         }
     }
 
-    private void SetupMoles(int moleCount)
+    private void SetupMoles()
     {
+        var moleCount = Scorer.CurrentRule.MoleCount;
+
         var itemToMatch = _targetMatchingItems
             .OrderBy(x => Random.Shared.Next())
             .First();
@@ -86,18 +88,25 @@ public partial class MoleManager : Node
             randomMoles[i].SetUp(remainingPickableItems[i]);
             randomMoles[i].ShowMole();
         }
-        
-        _moleTimer.WaitTime = Scorer.MoleTime;
+
+        _moleTimer.WaitTime = Scorer.CurrentRule.MoleTime;
         _moleTimer.Start();
     }
 
     public Task ResetGame()
     {
-        Scorer.Reset();
-        foreach(var mole in _moles){
+        Scorer.Reset(_singleton.IsHardMode);
+        foreach (var mole in _moles)
+        {
             mole.Reset();
         }
         return RefreshMatching(true);
+    }
+
+    public void Stop()
+    {
+        _moleTimer.Stop();
+        _playZone.Hide();
     }
 
     public async Task RefreshMatching(bool isReset = false)
@@ -106,18 +115,15 @@ public partial class MoleManager : Node
 
         if (!isReset)
             await Task.Delay(400);
-
-        var pickableItemCount = 4;
-        var moleCount = 3;
-
+ 
         _singleton.ClearNodesByGroupName("MatchTarget");
 
         var group = _textureGroups.OrderBy(x => Random.Shared.Next()).First();
         _randomPickableItems = group.Textures.OrderBy(x => Random.Shared.Next()).ToArray();
 
-        RandomTarget(pickableItemCount);
+        RandomTarget();
 
-        SetupMoles(moleCount);
+        SetupMoles();
 
         _playZone.Show();
     }
@@ -135,7 +141,7 @@ public partial class MoleManager : Node
 
         if (isCorrect)
         {
-            _targetMatchingItems.Remove(matchingItem); 
+            _targetMatchingItems.Remove(matchingItem);
             if (_targetMatchingItems.Count == 0)
             {
                 _soundFx.Play("correct_all_answer");
@@ -148,7 +154,7 @@ public partial class MoleManager : Node
             pressedMole.WhackCorrect();
             if (_targetMatchingItems.Count == 0)
             {
-                Scorer.AddScore(1);
+                Scorer.AddScore(true);
                 await Task.WhenAll(_resultScene.ShowCorrect(), matchingItem.Blink());
                 pressedMole.HideMole();
                 await RefreshMatching();
@@ -159,9 +165,8 @@ public partial class MoleManager : Node
                 await matchingItem.Blink();
                 pressedMole.HideMole();
                 matchingItem.HideImage();
-
-                var moleCount = 3;
-                SetupMoles(moleCount);
+ 
+                SetupMoles();
             }
         }
         else
@@ -175,22 +180,14 @@ public partial class MoleManager : Node
         }
     }
 
-    public void Stop()
-    {
-        _moleTimer.Stop();
-        _playZone.Hide();
-    }
-
     public async void OnStartHideMoles()
     {
-        foreach(var mole in _moles.Where(x=> !x.IsHiding)) 
+        foreach (var mole in _moles.Where(x => !x.IsHiding))
         {
             mole.HideMole();
         }
 
         await Task.Delay(200);
-
-        var moleCount = 3;
-        SetupMoles(moleCount);
+        SetupMoles();
     }
 }

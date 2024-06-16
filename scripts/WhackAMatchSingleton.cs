@@ -18,6 +18,8 @@ public partial class WhackAMatchSingleton : Node
     [Signal]
     public delegate void GoToShowScoreSceneEventHandler(int score);
 
+    public bool IsHardMode { get; set; } = false;
+
     public Node CurrentScene { get; set; }
 
     public override void _Ready()

@@ -39,7 +39,6 @@ public partial class SoundFx : Control
 			{
 				audioPlayer.Stream = soundToPlay;
 				audioPlayer.Play();
-				GD.Print(audioPlayer.Name);
 				break; 
 			}
 		}

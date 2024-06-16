@@ -13,7 +13,7 @@ config_version=5
 config/name="Train Your Brain"
 run/main_scene="res://scenes/master_scene.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
-config/icon="res://assets/whack_a_match/mole.svg"
+config/icon="res://icon.svg"
 
 [autoload]
 

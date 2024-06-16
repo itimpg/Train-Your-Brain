@@ -22,8 +22,6 @@ public partial class SaveDataManager : Node2D
 
 		var filePath = Path.Join(_path, _fileName);
 
-		GD.Print(filePath);
-
 		try
 		{
 			File.WriteAllText(filePath, saveFile.ToString());
@@ -93,6 +91,25 @@ public class SaveFile
 			else
 			{
 				_dictionary.Add(nameof(HighScore), value);
+			}
+		}
+	}
+
+	public int HighScoreHardMode
+	{
+		get
+		{
+			return _dictionary.ContainsKey(nameof(HighScoreHardMode)) ? (int)_dictionary[nameof(HighScoreHardMode)] : 0;
+		}
+		set
+		{
+			if (_dictionary.ContainsKey(nameof(HighScoreHardMode)))
+			{
+				_dictionary[nameof(HighScoreHardMode)] = value;
+			}
+			else
+			{
+				_dictionary.Add(nameof(HighScoreHardMode), value);
 			}
 		}
 	}
