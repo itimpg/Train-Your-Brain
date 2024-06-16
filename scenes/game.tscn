@@ -196,3 +196,5 @@ visible = false
 
 [node name="ResultScene" parent="." instance=ExtResource("10_mqxe3")]
 visible = false
+
+[node name="MoleTimer" type="Timer" parent="."]

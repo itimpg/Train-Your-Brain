@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Timer = Godot.Timer;
 
 public partial class Game : CanvasLayer
 {
@@ -43,7 +44,8 @@ public partial class Game : CanvasLayer
 			matchingItemsContainer,
 			moles,
 			GetNode<ResultScene>("ResultScene"),
-			_playZone);
+			_playZone,
+			GetNode<Timer>("MoleTimer"));
 
 		var gobackButton = GetNode<TextureButton>("MarginContainer/VBoxContainer/GobackButton");
 		gobackButton.Pressed += GoToTitleScene;
@@ -70,6 +72,7 @@ public partial class Game : CanvasLayer
 
 	private void OnGameTimeout()
 	{
+		_moleManager.Stop();
 		_singleton.EmitSignal(nameof(_singleton.GoToShowScoreScene), _moleManager.Scorer.Score);
 	}
 

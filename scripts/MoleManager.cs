@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Timer = Godot.Timer;
 
 public partial class MoleManager : Node
 {
@@ -14,6 +15,7 @@ public partial class MoleManager : Node
     private List<Mole> _moles;
     private ResultScene _resultScene;
     private MarginContainer _playZone;
+    private Timer _moleTimer;
 
     private PackedScene _matchingItemScene;
     private List<MatchingItem> _targetMatchingItems;
@@ -29,7 +31,8 @@ public partial class MoleManager : Node
         HBoxContainer matchingItemsContainer,
         List<Mole> moles,
         ResultScene resultScene,
-        MarginContainer playZone)
+        MarginContainer playZone,
+        Timer moleTimer)
     {
         _singleton = singleton;
         _soundFx = soundFx;
@@ -38,6 +41,8 @@ public partial class MoleManager : Node
         _resultScene = resultScene;
         _playZone = playZone;
         _singleton.OnMolePressed += OnMolePressed;
+        _moleTimer = moleTimer;
+        _moleTimer.Timeout += OnStartHideMoles;
 
         _matchingItemScene = GD.Load<PackedScene>("res://scenes/matching_item.tscn");
         _targetMatchingItems = new List<MatchingItem>();
@@ -81,6 +86,9 @@ public partial class MoleManager : Node
             randomMoles[i].SetUp(remainingPickableItems[i]);
             randomMoles[i].ShowMole();
         }
+        
+        _moleTimer.WaitTime = Scorer.MoleTime;
+        _moleTimer.Start();
     }
 
     public Task ResetGame()
@@ -116,6 +124,8 @@ public partial class MoleManager : Node
 
     public async void OnMolePressed(Mole pressedMole)
     {
+        _moleTimer.Stop();
+
         var matchingItem = _targetMatchingItems.FirstOrDefault(x => x.Key == pressedMole.Key);
         var isCorrect = matchingItem != null;
         foreach (var mole in _moles.Where(x => !x.IsHiding && x != pressedMole))
@@ -125,9 +135,7 @@ public partial class MoleManager : Node
 
         if (isCorrect)
         {
-            _targetMatchingItems.Remove(matchingItem);
-            Scorer.AddScore();
-
+            _targetMatchingItems.Remove(matchingItem); 
             if (_targetMatchingItems.Count == 0)
             {
                 _soundFx.Play("correct_all_answer");
@@ -140,12 +148,14 @@ public partial class MoleManager : Node
             pressedMole.WhackCorrect();
             if (_targetMatchingItems.Count == 0)
             {
+                Scorer.AddScore(1);
                 await Task.WhenAll(_resultScene.ShowCorrect(), matchingItem.Blink());
                 pressedMole.HideMole();
                 await RefreshMatching();
             }
             else
             {
+                Scorer.AddScore();
                 await matchingItem.Blink();
                 pressedMole.HideMole();
                 matchingItem.HideImage();
@@ -163,5 +173,24 @@ public partial class MoleManager : Node
             pressedMole.HideMole();
             await RefreshMatching();
         }
+    }
+
+    public void Stop()
+    {
+        _moleTimer.Stop();
+        _playZone.Hide();
+    }
+
+    public async void OnStartHideMoles()
+    {
+        foreach(var mole in _moles.Where(x=> !x.IsHiding)) 
+        {
+            mole.HideMole();
+        }
+
+        await Task.Delay(200);
+
+        var moleCount = 3;
+        SetupMoles(moleCount);
     }
 }
