@@ -13,10 +13,11 @@ public partial class SoundFx : Control
 	{
 		_sounds = new Dictionary<string, AudioStream>
 		{
-			{ "correct_answer", GD.Load<AudioStream>("res://assets/sound/correct_answer.mp3") },
-			{ "correct_all_answer", GD.Load<AudioStream>("res://assets/sound/correct_all_answer.mp3") },
+			{ "correct_answer", GD.Load<AudioStream>("res://assets/sound/correct_all_answer.mp3") },
+			{ "correct_all_answer", GD.Load<AudioStream>("res://assets/sound/correct_answer.mp3") },
 			{ "wrong_answer", GD.Load<AudioStream>("res://assets/sound/wrong_answer.mp3") },
-			{ "click", GD.Load<AudioStream>("res://assets/sound/correct_answer.mp3") }
+			{ "click", GD.Load<AudioStream>("res://assets/sound/correct_all_answer.mp3") },
+			{ "countdown", GD.Load<AudioStream>("res://assets/sound/correct_all_answer.mp3") },
 		};
 
 		_audioPlayers = GetChildren()
@@ -30,17 +31,17 @@ public partial class SoundFx : Control
 		{
 			return;
 		}
-		
+
 		var soundToPlay = _sounds[soundName];
 		foreach (var audioPlayer in _audioPlayers)
 		{
-			if (audioPlayer.Playing)
+			if (!audioPlayer.Playing)
 			{
-				continue;
+				audioPlayer.Stream = soundToPlay;
+				audioPlayer.Play();
+				GD.Print(audioPlayer.Name);
+				break; 
 			}
-
-			audioPlayer.Stream = soundToPlay;
-			audioPlayer.Play();
 		}
 	}
 }

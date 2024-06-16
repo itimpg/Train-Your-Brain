@@ -171,7 +171,6 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="GobackButton" type="TextureButton" parent="MarginContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("8_r7tq4")
@@ -189,7 +188,7 @@ offset_right = 31.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Go Back"
+text = "Done"
 label_settings = SubResource("LabelSettings_tptd1")
 
 [node name="StartGameTimer" parent="." instance=ExtResource("9_6ci16")]

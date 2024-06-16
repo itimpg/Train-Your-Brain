@@ -41,5 +41,3 @@ text = "3"
 label_settings = ExtResource("2_flth3")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
-one_shot = true
