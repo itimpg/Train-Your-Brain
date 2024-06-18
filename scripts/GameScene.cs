@@ -8,7 +8,7 @@ public partial class GameScene : CanvasLayer
 	private GameManager _gameManager;
 	private GameTimer _timer;
 	private Label _scoreLabel;
-	private MarginContainer _playZone;
+	private PlayZoneScene _playZone;
 
 	private WhackAMatchSingleton _singleton;
 
@@ -17,7 +17,7 @@ public partial class GameScene : CanvasLayer
 	public override void _Ready()
 	{
 		_singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
-		_playZone = GetNode<MarginContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone");
+		_playZone = GetNode<PlayZoneScene>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZoneScene");
 		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/HBoxContainer/Timer");
 		_timer.OnTimeout += OnGameTimeout;
 
@@ -27,18 +27,12 @@ public partial class GameScene : CanvasLayer
 		_startGameTimer.OnTimeout += StartGame;
 
 		_scoreLabel = GetNode<Label>("MarginContainer/VBoxContainer/HBoxContainer/ScoreLabel");
-
-		var matchingItemsContainer = GetNode<MatchingItemsContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/MatchingItemsContainer");
-		var molesContainer = GetNode<MolesContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/MolesContainer");
  
+		var playZoneScene = GetNode<PlayZoneScene>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZoneScene");
+
 		_gameManager.Init(
-			_singleton,
-			GetNode<SoundFx>("/root/SoundFx"),
-			matchingItemsContainer,
-			molesContainer,
-			GetNode<ResultScene>("ResultScene"),
-			_playZone,
-			GetNode<Timer>("MoleTimer"));
+			playZoneScene,
+			GetNode<ResultScene>("ResultScene"));
 
 		var gobackButton = GetNode<TextureButton>("MarginContainer/VBoxContainer/GobackButton");
 		gobackButton.Pressed += GoToTitleScene;

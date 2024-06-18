@@ -12,114 +12,82 @@ public partial class GameManager : Node
     private WhackAMatchSingleton _singleton;
     private SoundFx _soundFx;
     private ResultScene _resultScene;
-    private MarginContainer _playZone;
-    private Timer _moleTimer;
+    private PlayZoneScene _playZoneScene;
 
-    private PackedScene _matchingItemScene;
     private List<MatchingItem> _targetMatchingItems;
     private IEnumerable<TextureGroup> _textureGroups;
 
     private LoadedTexture[] _randomPickableItems;
 
-    private MatchingItemsContainer _matchingItemsContainer;
-    private MolesContainer _molesContainer;
-
     public Scorer Scorer { get; private set; }
 
-    public void Init(
-        WhackAMatchSingleton singleton,
-        SoundFx soundFx,
-        MatchingItemsContainer matchingItemsContainer,
-        MolesContainer molesContainer,
-        ResultScene resultScene,
-        MarginContainer playZone,
-        Timer moleTimer)
+    public override void _Ready()
     {
-        _singleton = singleton;
-        _soundFx = soundFx;
-        _matchingItemsContainer = matchingItemsContainer;
-        _molesContainer = molesContainer;
-        _resultScene = resultScene;
-        _playZone = playZone;
+        _singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
         _singleton.OnMolePressed += OnMolePressed;
-        _moleTimer = moleTimer;
-        _moleTimer.Timeout += OnStartHideMoles;
 
-        _matchingItemScene = GD.Load<PackedScene>("res://scenes/matching_item.tscn");
+        _soundFx = GetNode<SoundFx>("/root/SoundFx");
+
         _targetMatchingItems = new List<MatchingItem>();
-
-        var path = "res://assets/whack_a_match/pickable_items/";
-        _textureGroups = ImageLoader.LoadFromPath(path);
 
         Scorer = new Scorer();
     }
 
+    public void Init(
+        PlayZoneScene playZoneScene,
+        ResultScene resultScene)
+    {
+        _playZoneScene = playZoneScene;
+        _playZoneScene.MolesContainer.OnTimeout += SetupMoles;
+
+        _resultScene = resultScene;
+
+        var path = "res://assets/whack_a_match/pickable_items/";
+        _textureGroups = ImageLoader.LoadFromPath(path);
+    }
+
     private void SetupMoles()
     {
-        var moleCount = Scorer.CurrentRule.MoleCount;
-
-        var itemToMatch = _targetMatchingItems
-            .OrderBy(x => Random.Shared.Next())
-            .First();
-
-        var remainingPickableItems = _randomPickableItems
-            .Where(x => !_targetMatchingItems.Select(x => x.Key).Contains(x.Name))
-            .Take(moleCount - 1)
-            .Append(itemToMatch.LoadedTexture)
-            .OrderBy(x => Random.Shared.Next())
-            .ToArray();
-
-        var randomMoles = _molesContainer.Moles.OrderBy(x => Random.Shared.Next()).Take(moleCount).ToArray();
-
-        for (var i = 0; i < moleCount; i++)
-        {
-            randomMoles[i].SetUp(remainingPickableItems[i]);
-            randomMoles[i].ShowMole();
-        }
-
-        _moleTimer.WaitTime = Scorer.CurrentRule.MoleTime;
-        _moleTimer.Start();
+        _playZoneScene.MolesContainer.RandomMole(Scorer.CurrentRule, _randomPickableItems, _targetMatchingItems);
     }
 
     public Task ResetGame()
     {
         Scorer.Reset(_singleton.IsHardMode);
-        _molesContainer.Reset();
+        _playZoneScene.MolesContainer.Reset();
         return RefreshMatching(true);
     }
 
     public void Stop()
     {
-        _moleTimer.Stop();
-        _playZone.Hide();
+        _playZoneScene.MolesContainer.StopMoleCountdown();
+        _playZoneScene.Hide();
     }
 
     public async Task RefreshMatching(bool isReset = false)
     {
-        _playZone.Hide();
+        _playZoneScene.Hide();
 
         if (!isReset)
             await Task.Delay(400);
 
-        _singleton.ClearNodesByGroupName("MatchTarget");
-
         var group = _textureGroups.OrderBy(x => Random.Shared.Next()).First();
         _randomPickableItems = group.Textures.OrderBy(x => Random.Shared.Next()).ToArray();
 
-        _targetMatchingItems = _matchingItemsContainer.GenerateMathingItems(Scorer.CurrentRule.MatchCount, _randomPickableItems).ToList();
+        _targetMatchingItems = _playZoneScene.MatchingItemsContainer.GenerateMathingItems(Scorer.CurrentRule.MatchCount, _randomPickableItems).ToList();
 
         SetupMoles();
 
-        _playZone.Show();
+        _playZoneScene.Show();
     }
 
     public async void OnMolePressed(Mole pressedMole)
     {
-        _moleTimer.Stop();
+        _playZoneScene.MolesContainer.StopMoleCountdown();
 
         var matchingItem = _targetMatchingItems.FirstOrDefault(x => x.Key == pressedMole.Key);
         var isCorrect = matchingItem != null;
-        foreach (var mole in _molesContainer.Moles.Where(x => !x.IsHiding && x != pressedMole))
+        foreach (var mole in _playZoneScene.MolesContainer.Moles.Where(x => !x.IsHiding && x != pressedMole))
         {
             mole.HideMole();
         }
@@ -167,7 +135,7 @@ public partial class GameManager : Node
 
     public async void OnStartHideMoles()
     {
-        foreach (var mole in _molesContainer.Moles.Where(x => !x.IsHiding))
+        foreach (var mole in _playZoneScene.MolesContainer.Moles.Where(x => !x.IsHiding))
         {
             mole.HideMole();
         }

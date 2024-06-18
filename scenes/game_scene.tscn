@@ -1,12 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://bnj61bu4m6f87"]
+[gd_scene load_steps=12 format=3 uid="uid://bnj61bu4m6f87"]
 
 [ext_resource type="Script" path="res://scripts/GameScene.cs" id="1_3wls3"]
 [ext_resource type="PackedScene" uid="uid://tt77v0v4iatp" path="res://scenes/game_timer.tscn" id="2_nd1na"]
 [ext_resource type="PackedScene" uid="uid://c7vvm26cc72ex" path="res://scenes/game_manager.tscn" id="2_r7rlf"]
 [ext_resource type="LabelSettings" uid="uid://la0xr3k21eaw" path="res://assets/timer_font_style.tres" id="3_qdt4m"]
 [ext_resource type="Texture2D" uid="uid://c0ofv416mbqxu" path="res://assets/whack_a_match/background_main.svg" id="4_atfbx"]
-[ext_resource type="PackedScene" uid="uid://b5c06sc6bgdk7" path="res://scenes/matching_items_container.tscn" id="6_t1348"]
-[ext_resource type="PackedScene" uid="uid://d0wbt0m8jvhp5" path="res://scenes/moles_container.tscn" id="7_uy2ht"]
+[ext_resource type="PackedScene" uid="uid://bnb3kqe1c1ha1" path="res://scenes/play_zone_scene.tscn" id="6_rskxk"]
 [ext_resource type="Texture2D" uid="uid://b0e8lqgpc27dt" path="res://assets/whack_a_match/button_start.svg" id="8_haubv"]
 [ext_resource type="PackedScene" uid="uid://hm8e1lkrpy4d" path="res://scenes/countdown_scene.tscn" id="9_yhm18"]
 [ext_resource type="PackedScene" uid="uid://3jtemqdpfwbd" path="res://scenes/result_scene.tscn" id="10_sak2u"]
@@ -77,34 +76,12 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("4_atfbx")
 
-[node name="PlayZone" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect"]
+[node name="PlayZoneScene" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect" instance=ExtResource("6_rskxk")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone"]
-layout_mode = 2
-
-[node name="MatchingItemsContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer" instance=ExtResource("6_t1348")]
-layout_mode = 2
-
-[node name="Spacer1" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="MolesContainer" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer" instance=ExtResource("7_uy2ht")]
-layout_mode = 2
-
-[node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
 [node name="Control5" type="Control" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
