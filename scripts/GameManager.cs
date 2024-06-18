@@ -7,12 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Timer = Godot.Timer;
 
-public partial class MoleManager : Node
+public partial class GameManager : Node
 {
     private WhackAMatchSingleton _singleton;
     private SoundFx _soundFx;
-    private HBoxContainer _matchingItemsContainer;
-    private List<Mole> _moles;
     private ResultScene _resultScene;
     private MarginContainer _playZone;
     private Timer _moleTimer;
@@ -23,13 +21,16 @@ public partial class MoleManager : Node
 
     private LoadedTexture[] _randomPickableItems;
 
+    private MatchingItemsContainer _matchingItemsContainer;
+    private MolesContainer _molesContainer;
+
     public Scorer Scorer { get; private set; }
 
-    public MoleManager(
+    public void Init(
         WhackAMatchSingleton singleton,
         SoundFx soundFx,
-        HBoxContainer matchingItemsContainer,
-        List<Mole> moles,
+        MatchingItemsContainer matchingItemsContainer,
+        MolesContainer molesContainer,
         ResultScene resultScene,
         MarginContainer playZone,
         Timer moleTimer)
@@ -37,7 +38,7 @@ public partial class MoleManager : Node
         _singleton = singleton;
         _soundFx = soundFx;
         _matchingItemsContainer = matchingItemsContainer;
-        _moles = moles;
+        _molesContainer = molesContainer;
         _resultScene = resultScene;
         _playZone = playZone;
         _singleton.OnMolePressed += OnMolePressed;
@@ -51,19 +52,6 @@ public partial class MoleManager : Node
         _textureGroups = ImageLoader.LoadFromPath(path);
 
         Scorer = new Scorer();
-    }
-
-    private void RandomTarget()
-    {
-        _targetMatchingItems.Clear();
-        for (var i = 0; i < Scorer.CurrentRule.MatchCount; i++)
-        {
-            MatchingItem item = _matchingItemScene.Instantiate<MatchingItem>();
-            item.Init(_randomPickableItems[i]);
-            _matchingItemsContainer.AddChild(item);
-
-            _targetMatchingItems.Add(item);
-        }
     }
 
     private void SetupMoles()
@@ -81,7 +69,7 @@ public partial class MoleManager : Node
             .OrderBy(x => Random.Shared.Next())
             .ToArray();
 
-        var randomMoles = _moles.OrderBy(x => Random.Shared.Next()).Take(moleCount).ToArray();
+        var randomMoles = _molesContainer.Moles.OrderBy(x => Random.Shared.Next()).Take(moleCount).ToArray();
 
         for (var i = 0; i < moleCount; i++)
         {
@@ -96,10 +84,7 @@ public partial class MoleManager : Node
     public Task ResetGame()
     {
         Scorer.Reset(_singleton.IsHardMode);
-        foreach (var mole in _moles)
-        {
-            mole.Reset();
-        }
+        _molesContainer.Reset();
         return RefreshMatching(true);
     }
 
@@ -115,13 +100,13 @@ public partial class MoleManager : Node
 
         if (!isReset)
             await Task.Delay(400);
- 
+
         _singleton.ClearNodesByGroupName("MatchTarget");
 
         var group = _textureGroups.OrderBy(x => Random.Shared.Next()).First();
         _randomPickableItems = group.Textures.OrderBy(x => Random.Shared.Next()).ToArray();
 
-        RandomTarget();
+        _targetMatchingItems = _matchingItemsContainer.GenerateMathingItems(Scorer.CurrentRule.MatchCount, _randomPickableItems).ToList();
 
         SetupMoles();
 
@@ -134,7 +119,7 @@ public partial class MoleManager : Node
 
         var matchingItem = _targetMatchingItems.FirstOrDefault(x => x.Key == pressedMole.Key);
         var isCorrect = matchingItem != null;
-        foreach (var mole in _moles.Where(x => !x.IsHiding && x != pressedMole))
+        foreach (var mole in _molesContainer.Moles.Where(x => !x.IsHiding && x != pressedMole))
         {
             mole.HideMole();
         }
@@ -165,7 +150,7 @@ public partial class MoleManager : Node
                 await matchingItem.Blink();
                 pressedMole.HideMole();
                 matchingItem.HideImage();
- 
+
                 SetupMoles();
             }
         }
@@ -182,7 +167,7 @@ public partial class MoleManager : Node
 
     public async void OnStartHideMoles()
     {
-        foreach (var mole in _moles.Where(x => !x.IsHiding))
+        foreach (var mole in _molesContainer.Moles.Where(x => !x.IsHiding))
         {
             mole.HideMole();
         }

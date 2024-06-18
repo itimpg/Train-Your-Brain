@@ -7,7 +7,7 @@ public partial class MasterScene : Node2D
 	private WhackAMatchSingleton _singleton;
 
 	private TitleScene _titleScene;
-	private Game _gameScene;
+	private GameScene _gameScene;
 	private ShowScoreScene _showScoreScene;
 
 	public override void _Ready()
@@ -18,7 +18,7 @@ public partial class MasterScene : Node2D
 		_singleton.GoToShowScoreScene += GoToShowScoreScene;
 
 		_titleScene = GetNode<TitleScene>("TitleScene");
-		_gameScene = GetNode<Game>("Game");
+		_gameScene = GetNode<GameScene>("GameScene");
 		_showScoreScene = GetNode<ShowScoreScene>("ShowScoreScene");
 
 		GoToTitleScene();

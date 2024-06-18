@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using Timer = Godot.Timer;
 
-public partial class Game : CanvasLayer
+public partial class GameScene : CanvasLayer
 {
-	private MoleManager _moleManager;
+	private GameManager _gameManager;
 	private GameTimer _timer;
 	private Label _scoreLabel;
 	private MarginContainer _playZone;
@@ -21,28 +21,21 @@ public partial class Game : CanvasLayer
 		_timer = GetNode<GameTimer>("MarginContainer/VBoxContainer/HBoxContainer/Timer");
 		_timer.OnTimeout += OnGameTimeout;
 
+		_gameManager = GetNode<GameManager>("GameManager");
+
 		_startGameTimer = GetNode<CountdownScene>("StartGameTimer");
 		_startGameTimer.OnTimeout += StartGame;
 
 		_scoreLabel = GetNode<Label>("MarginContainer/VBoxContainer/HBoxContainer/ScoreLabel");
 
-		var matchingItemsContainer = GetNode<HBoxContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer/TextureRect/MatchingItemsContainer");
-
-		var mole1 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer2/Mole1");
-		var mole2 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer3/Mole2");
-		var mole3 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer3/Mole3");
-		var mole4 = GetNode<Mole>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/HBoxContainer4/Mole4");
-
-		var moles = new List<Mole>
-		{
-			mole1, mole2, mole3, mole4
-		};
-
-		_moleManager = new MoleManager(
+		var matchingItemsContainer = GetNode<MatchingItemsContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/MatchingItemsContainer");
+		var molesContainer = GetNode<MolesContainer>("MarginContainer/VBoxContainer/HBoxContainer2/TextureRect/PlayZone/VBoxContainer/MolesContainer");
+ 
+		_gameManager.Init(
 			_singleton,
 			GetNode<SoundFx>("/root/SoundFx"),
 			matchingItemsContainer,
-			moles,
+			molesContainer,
 			GetNode<ResultScene>("ResultScene"),
 			_playZone,
 			GetNode<Timer>("MoleTimer"));
@@ -54,30 +47,31 @@ public partial class Game : CanvasLayer
 	public void ShowGameScene()
 	{
 		_timer.Reset();
-		_moleManager.Scorer.Reset(_singleton.IsHardMode);
+		_gameManager.Scorer.Reset(_singleton.IsHardMode);
 		_playZone.Hide();
 		_startGameTimer.StartCountdown();
 	}
 
 	private async void StartGame()
 	{
-		await _moleManager.ResetGame();
+		await _gameManager.ResetGame();
 		_timer.StartCountdown();
 	}
 
 	public override void _Process(double delta)
 	{
-		_scoreLabel.Text = _moleManager.Scorer.Score.ToString();
+		_scoreLabel.Text = _gameManager.Scorer.Score.ToString();
 	}
 
 	private void OnGameTimeout()
 	{
-		_moleManager.Stop();
-		_singleton.EmitSignal(nameof(_singleton.GoToShowScoreScene), _moleManager.Scorer.Score);
+		_gameManager.Stop();
+		_singleton.EmitSignal(nameof(_singleton.GoToShowScoreScene), _gameManager.Scorer.Score);
 	}
 
 	private void GoToTitleScene()
 	{
+		_gameManager.Stop();
 		_singleton.EmitSignal(nameof(_singleton.GoToTitleScene));
 	}
 }

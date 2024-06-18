@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0wbt0m8jvhp5"]
+
+[ext_resource type="Script" path="res://scripts/MolesContainer.cs" id="1_1l14a"]
+[ext_resource type="PackedScene" uid="uid://oaxx6pbvs22n" path="res://scenes/mole.tscn" id="1_37po7"]
+
+[node name="MolesContainer" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1l14a")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 168
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Mole1" parent="VBoxContainer/HBoxContainer2" instance=ExtResource("1_37po7")]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 280
+
+[node name="Mole2" parent="VBoxContainer/HBoxContainer3" instance=ExtResource("1_37po7")]
+layout_mode = 2
+
+[node name="Mole3" parent="VBoxContainer/HBoxContainer3" instance=ExtResource("1_37po7")]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Mole4" parent="VBoxContainer/HBoxContainer4" instance=ExtResource("1_37po7")]
+layout_mode = 2

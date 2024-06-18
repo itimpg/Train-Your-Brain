@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/MasterScene.cs" id="1_12lud"]
 [ext_resource type="PackedScene" uid="uid://b126cqonmmqps" path="res://scenes/title_scene.tscn" id="1_ayihb"]
-[ext_resource type="PackedScene" uid="uid://bnj61bu4m6f87" path="res://scenes/game.tscn" id="2_ucleo"]
+[ext_resource type="PackedScene" uid="uid://bnj61bu4m6f87" path="res://scenes/game_scene.tscn" id="2_ucleo"]
 [ext_resource type="PackedScene" uid="uid://d06wsg2o066og" path="res://scenes/show_score_scene.tscn" id="3_m4m6y"]
 [ext_resource type="AudioStream" uid="uid://doqmc7vifttti" path="res://assets/sound/bgm.mp3" id="5_yncto"]
 
@@ -11,7 +11,7 @@ script = ExtResource("1_12lud")
 
 [node name="TitleScene" parent="." instance=ExtResource("1_ayihb")]
 
-[node name="Game" parent="." instance=ExtResource("2_ucleo")]
+[node name="GameScene" parent="." instance=ExtResource("2_ucleo")]
 
 [node name="ShowScoreScene" parent="." instance=ExtResource("3_m4m6y")]
 
