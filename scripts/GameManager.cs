@@ -84,14 +84,10 @@ public partial class GameManager : Node
     public async void OnMolePressed(Mole pressedMole)
     {
         _playZoneScene.MolesContainer.StopMoleCountdown();
+        _playZoneScene.MolesContainer.HideMolesButSelected(pressedMole);
 
         var matchingItem = _targetMatchingItems.FirstOrDefault(x => x.Key == pressedMole.Key);
         var isCorrect = matchingItem != null;
-        foreach (var mole in _playZoneScene.MolesContainer.Moles.Where(x => !x.IsHiding && x != pressedMole))
-        {
-            mole.HideMole();
-        }
-
         if (isCorrect)
         {
             _targetMatchingItems.Remove(matchingItem);
@@ -131,16 +127,5 @@ public partial class GameManager : Node
             pressedMole.HideMole();
             await RefreshMatching();
         }
-    }
-
-    public async void OnStartHideMoles()
-    {
-        foreach (var mole in _playZoneScene.MolesContainer.Moles.Where(x => !x.IsHiding))
-        {
-            mole.HideMole();
-        }
-
-        await Task.Delay(200);
-        SetupMoles();
     }
 }

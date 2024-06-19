@@ -9,11 +9,17 @@ public partial class MolesContainer : Control
 	[Signal]
 	public delegate void OnTimeoutEventHandler();
 
+	private WhackAMatchSingleton _singleton;
+	private bool _isMolePressed;
+
 	public List<Mole> Moles { get; private set; }
 	private Timer _timer;
 
 	public override void _Ready()
 	{
+		_singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
+		_singleton.OnMolePressed += OnMolePressed;
+
 		Moles = new List<Mole>
 		{
 			GetNode<Mole>("VBoxContainer/HBoxContainer3/Mole2"),
@@ -33,9 +39,18 @@ public partial class MolesContainer : Control
 
 	public void Reset()
 	{
+		_isMolePressed = false;
 		foreach (var mole in Moles)
 		{
 			mole.Reset();
+		}
+	}
+
+	public void HideMolesButSelected(Mole selectedMole)
+	{
+		foreach (var mole in Moles.Where(x => !x.IsHiding && x != selectedMole))
+		{
+			mole.HideMole();
 		}
 	}
 
@@ -76,6 +91,8 @@ public partial class MolesContainer : Control
 
 		_timer.WaitTime = scoreRule.MoleTime;
 		_timer.Start();
+
+		_isMolePressed = false;
 	}
 
 	private async void OnMolesTimeout()
@@ -86,7 +103,16 @@ public partial class MolesContainer : Control
 		}
 
 		await Task.Delay(200);
+		if (_isMolePressed)
+		{
+			return;
+		}
 
 		EmitSignal(SignalName.OnTimeout);
+	}
+
+	private void OnMolePressed(Mole mole)
+	{
+		_isMolePressed = true;
 	}
 }
