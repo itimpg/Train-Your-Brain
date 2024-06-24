@@ -90,7 +90,7 @@ public partial class Scorer
         if (isFinishCombo)
         {
             _winCount++;
-            if (_winCount >= CurrentRule.MatchCount)
+            if (_winCount >= CurrentRule.WinCountToNextLevel)
             {
                 _ruleIndex++;
                 _winCount = 0;

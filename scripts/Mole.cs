@@ -9,6 +9,7 @@ public partial class Mole : Control
   private AnimationPlayer animationPlayer;
   private TextureRect _texture;
   public bool IsHiding { get; set; }
+  public bool IsWhacking { get; set; }
 
   public override void _Ready()
   {
@@ -32,6 +33,12 @@ public partial class Mole : Control
 
   private void OnButtonPressed()
   {
+    if (IsWhacking)
+    {
+      return;
+    }
+
+    IsWhacking = true;
     var singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
     singleton.EmitSignal(nameof(singleton.OnMolePressed), this);
   }
@@ -40,6 +47,7 @@ public partial class Mole : Control
   {
     animationPlayer.Play("show");
     IsHiding = false;
+    IsWhacking = false;
   }
 
   public void HideMole()
