@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://d06wsg2o066og"]
+[gd_scene load_steps=10 format=3 uid="uid://d06wsg2o066og"]
 
 [ext_resource type="Script" path="res://scripts/ShowScoreScene.cs" id="1_2p48l"]
 [ext_resource type="Texture2D" uid="uid://c0ofv416mbqxu" path="res://assets/whack_a_match/background_main.svg" id="1_mp17y"]
 [ext_resource type="Texture2D" uid="uid://c67ydq8vfl1m2" path="res://assets/whack_a_match/button.svg" id="2_a1ax5"]
+[ext_resource type="PackedScene" uid="uid://dx41yvv7lpkl6" path="res://scenes/score_board.tscn" id="3_grhtg"]
 [ext_resource type="PackedScene" uid="uid://vnb4n0pu32bi" path="res://scenes/cooldown_scene.tscn" id="4_emc3a"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7rf5i"]
@@ -16,16 +17,6 @@ outline_color = Color(0.34902, 0.215686, 0.247059, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_d3omr"]
 font_size = 84
 outline_size = 48
-outline_color = Color(0.34902, 0.215686, 0.247059, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_qb16a"]
-font_size = 24
-font_color = Color(0.34902, 0.215686, 0.247059, 1)
-outline_color = Color(0.34902, 0.215686, 0.247059, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_1qvpp"]
-font_size = 24
-font_color = Color(0.34902, 0.215686, 0.247059, 1)
 outline_color = Color(0.34902, 0.215686, 0.247059, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_tm7lq"]
@@ -67,11 +58,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Spacer7" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -84,37 +70,8 @@ size_flags_horizontal = 4
 text = "9999"
 label_settings = SubResource("LabelSettings_d3omr")
 
-[node name="Spacer6" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ScoreBoard" parent="Panel/MarginContainer/VBoxContainer" instance=ExtResource("3_grhtg")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Spacer4" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Spacer2" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Label2" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "High Score:"
-label_settings = SubResource("LabelSettings_qb16a")
-
-[node name="HighScoreLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "9999
-"
-label_settings = SubResource("LabelSettings_1qvpp")
 
 [node name="MiniSpacer2" type="Control" parent="Panel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 12)
@@ -186,3 +143,4 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CooldownScene" parent="." instance=ExtResource("4_emc3a")]
+visible = false

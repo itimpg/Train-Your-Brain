@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public partial class ShowScoreScene : CanvasLayer
 {
@@ -7,21 +9,21 @@ public partial class ShowScoreScene : CanvasLayer
 	private CooldownScene _cooldownScene;
 	private SaveDataManager _saveManager;
 
-	private Label _highScoreLabel, _scoreLabel;
+	private Label _scoreLabel;
 
 	private WhackAMatchSingleton _singleton;
 	private SoundFx _soundFx;
+
+	private ScoreBoard _scoreBoard;
 
 	public override void _Ready()
 	{
 		_singleton = GetNode<WhackAMatchSingleton>("/root/WhackAMatchSingleton");
 		_soundFx = GetNode<SoundFx>("/root/SoundFx");
 
-
 		_saveManager = GetNode<SaveDataManager>("/root/SaveDataManager");
-		_highScoreLabel = GetNode<Label>("Panel/MarginContainer/VBoxContainer/HBoxContainer/HighScoreLabel");
 		_scoreLabel = GetNode<Label>("Panel/MarginContainer/VBoxContainer/ScoreLabel");
-
+		_scoreBoard = GetNode<ScoreBoard>("Panel/MarginContainer/VBoxContainer/ScoreBoard");
 		var retryButton = GetNode<TextureButton>("Panel/MarginContainer/VBoxContainer/RetryButton");
 		retryButton.Pressed += RetryGame;
 
@@ -36,28 +38,17 @@ public partial class ShowScoreScene : CanvasLayer
 		_score = score;
 		_cooldownScene.ShowScreen();
 
-		var data = _saveManager.LoadData();
+		var data = _saveManager.LoadGame();
 
 		if (_singleton.IsHardMode)
 		{
-
-			if (_score > data.HighScoreHardMode)
-			{
-				data.HighScoreHardMode = _score;
-				_saveManager.SaveData(data);
-			}
-
-			_highScoreLabel.Text = data.HighScoreHardMode.ToString();
+			_saveManager.CheckUpdateSaveData(data, _score, true);
+			_scoreBoard.ShowScoreHistory(data.HardScoreHistories);
 		}
 		else
 		{
-			if (_score > data.HighScore)
-			{
-				data.HighScore = _score;
-				_saveManager.SaveData(data);
-			}
-
-			_highScoreLabel.Text = data.HighScore.ToString();
+			_saveManager.CheckUpdateSaveData(data, _score, false);
+			_scoreBoard.ShowScoreHistory(data.EasyScoreHistories);
 		}
 
 		_scoreLabel.Text = _score.ToString();

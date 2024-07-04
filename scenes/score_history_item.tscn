@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3 uid="uid://djo12u85y3juh"]
+
+[ext_resource type="Script" path="res://scripts/ScoreHistoryItem.cs" id="1_0ux0t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fyocv"]
+bg_color = Color(0.576471, 0.823529, 0.505882, 0.501961)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_3msds"]
+font_size = 32
+outline_color = Color(0.733333, 0.917647, 0.603922, 1)
+
+[node name="ScoreHistoryItem" type="MarginContainer" groups=["score_history_item"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0ux0t")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fyocv")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="ScoreLabel" type="Label" parent="Panel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "9999"
+label_settings = SubResource("LabelSettings_3msds")

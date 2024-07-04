@@ -1,6 +1,9 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using Dictionary = Godot.Collections.Dictionary;
 
 public partial class SaveDataManager : Node2D
@@ -13,7 +16,7 @@ public partial class SaveDataManager : Node2D
 		_fileName = "SaveGame.json";
 	}
 
-	public void SaveData(SaveFile saveFile)
+	public void SaveData(GameSaveData saveData)
 	{
 		if (!Directory.Exists(_path))
 		{
@@ -21,10 +24,11 @@ public partial class SaveDataManager : Node2D
 		}
 
 		var filePath = Path.Join(_path, _fileName);
-
+		var json = JsonSerializer.Serialize(saveData);
+		GD.Print(json);
 		try
 		{
-			File.WriteAllText(filePath, saveFile.ToString());
+			File.WriteAllText(filePath, json);
 		}
 		catch (Exception ex)
 		{
@@ -32,90 +36,53 @@ public partial class SaveDataManager : Node2D
 		}
 	}
 
-	public SaveFile LoadData()
+	public GameSaveData LoadGame()
 	{
 		var filePath = Path.Join(_path, _fileName);
+		
 		if (!File.Exists(filePath))
 		{
-			return new SaveFile();
+			return new GameSaveData();
 		}
 
 		try
 		{
-			var loadedData = File.ReadAllText(filePath);
-			Json jsonLoader = new Json();
-			Error error = jsonLoader.Parse(loadedData);
-			if (error != Error.Ok)
-			{
-				GD.PrintErr(error);
-				return new SaveFile();
-			}
-
-			return new SaveFile((Dictionary)jsonLoader.Data);
+			var json = File.ReadAllText(filePath);
+			GD.Print(json);
+			return JsonSerializer.Deserialize<GameSaveData>(json);
 		}
 		catch (Exception ex)
 		{
 			GD.PrintErr(ex);
 		}
 
-		return new SaveFile();
+		return new GameSaveData();
+	}
+
+	public void CheckUpdateSaveData(GameSaveData data, int newScore, bool isHardMode)
+	{
+		if (isHardMode)
+		{
+			data.HardScoreHistories.Add(newScore);
+			data.HardScoreHistories = data.HardScoreHistories.OrderByDescending(x => x).Take(5).ToList();
+		}
+		else
+		{
+			data.EasyScoreHistories.Add(newScore);
+			data.EasyScoreHistories = data.EasyScoreHistories.OrderByDescending(x => x).Take(5).ToList();
+		}
+		SaveData(data);
 	}
 }
 
-public class SaveFile
+public class GameSaveData
 {
-	private Dictionary _dictionary;
+	public List<int> EasyScoreHistories { get; set; }
+	public List<int> HardScoreHistories { get; set; }
 
-	public SaveFile()
+	public GameSaveData()
 	{
-		_dictionary = new Dictionary();
-	}
-
-	public SaveFile(Dictionary dictionary)
-	{
-		_dictionary = dictionary;
-	}
-
-	public int HighScore
-	{
-		get
-		{
-			return _dictionary.ContainsKey(nameof(HighScore)) ? (int)_dictionary[nameof(HighScore)] : 0;
-		}
-		set
-		{
-			if (_dictionary.ContainsKey(nameof(HighScore)))
-			{
-				_dictionary[nameof(HighScore)] = value;
-			}
-			else
-			{
-				_dictionary.Add(nameof(HighScore), value);
-			}
-		}
-	}
-
-	public int HighScoreHardMode
-	{
-		get
-		{
-			return _dictionary.ContainsKey(nameof(HighScoreHardMode)) ? (int)_dictionary[nameof(HighScoreHardMode)] : 0;
-		}
-		set
-		{
-			if (_dictionary.ContainsKey(nameof(HighScoreHardMode)))
-			{
-				_dictionary[nameof(HighScoreHardMode)] = value;
-			}
-			else
-			{
-				_dictionary.Add(nameof(HighScoreHardMode), value);
-			}
-		}
-	}
-
-	public override string ToString()
-	{
-		return Json.Stringify(_dictionary);
+		EasyScoreHistories = new List<int>();
+		HardScoreHistories = new List<int>();
 	}
 }

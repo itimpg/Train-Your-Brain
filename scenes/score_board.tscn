@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://dx41yvv7lpkl6"]
+
+[ext_resource type="Script" path="res://scripts/ScoreBoard.cs" id="1_f1nrk"]
+[ext_resource type="PackedScene" uid="uid://djo12u85y3juh" path="res://scenes/score_history_item.tscn" id="1_qdish"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_vswa0"]
+font_size = 32
+outline_size = 16
+outline_color = Color(0.34902, 0.215686, 0.247059, 1)
+
+[node name="ScoreBoard" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
+script = ExtResource("1_f1nrk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "High Score :"
+label_settings = SubResource("LabelSettings_vswa0")
+
+[node name="ScoreHistoryContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ScoreHistoryItem" parent="VBoxContainer/ScoreHistoryContainer" instance=ExtResource("1_qdish")]
+layout_mode = 2
+
+[node name="ScoreHistoryItem2" parent="VBoxContainer/ScoreHistoryContainer" instance=ExtResource("1_qdish")]
+layout_mode = 2
+
+[node name="ScoreHistoryItem3" parent="VBoxContainer/ScoreHistoryContainer" instance=ExtResource("1_qdish")]
+layout_mode = 2
+
+[node name="ScoreHistoryItem4" parent="VBoxContainer/ScoreHistoryContainer" instance=ExtResource("1_qdish")]
+layout_mode = 2
+
+[node name="ScoreHistoryItem5" parent="VBoxContainer/ScoreHistoryContainer" instance=ExtResource("1_qdish")]
+layout_mode = 2
